@@ -1,0 +1,315 @@
+{% load static %}
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'main/css/main.css' %}">
+    <link rel="shortcut icon" href="{% static 'main/img/logo.svg' %}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+</head>
+<body>
+
+<aside>
+    <a href="{% url 'index' %}"><img src="{% static 'main/img/logo.svg' %}" alt="Лого"></a>
+    {% if user.is_authenticated %}
+    <span class="logo">Панель администратора</span>
+    {% else %}
+    <span class="logo">Музыкальный архив</span>
+    {% endif %}
+    <div class="create">
+        {% if is_admin %}
+        <ul> 
+            <li><a href="#" data-bs-toggle="modal" data-bs-target="#createCategoryModal">Добавить категорию</a></li>
+            <li><a href="#" data-bs-toggle="modal" data-bs-target="#createAlbumModal">Добавить альбом</a></li>
+            <li><a href="#" data-bs-toggle="modal" data-bs-target="#createSongModal">Добавить песню</a></li>
+        </ul>
+        {% endif %}
+    </div>
+    <h3>Категории</h3>
+    <ul>
+        {% for section in sections %}
+            <li class="section-item">
+                <span class="section-name"><a href="{% url 'category_songs' section.name %}">{{ section.name }}</a></span>
+                {% if is_admin %}
+                <span class="action-icons">
+                    <a href="#" class="text-warning me-2 edit-section" data-bs-toggle="modal" data-bs-target="#editCategoryModal" data-id="{{ section.id }}" data-name="{{ section.name }}"><i class="fas fa-pencil-alt"></i></a>
+                    <a href="{% url 'delete_section' section.id %}" class="text-danger"><i class="fas fa-trash"></i></a>
+                </span>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+    <div class="login">
+        {% if user.is_authenticated %}
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Выйти</button>
+            </form>
+        {% else %}
+            <a href="{% url 'login' %}" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Войти</a>
+        {% endif %}
+    </div>
+</aside> 
+
+<main>
+    <h1>{{ title }}</h1>
+    <div class="container mt-4">
+        <div class="row">
+            {% for song in songs %}
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <a href="{% url 'song_detail' song.id %}" class="card-link">
+                        <img src="{% if song.image %}{{ song.image.url }}{% else %}{% static 'main/img/default_song_image.jpg' %}{% endif %}" class="card-img-top" alt="{{ song.title }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ song.title }}</h5>
+                            <p class="card-text">{{ song.artist }}</p>
+                            {% if is_admin %}
+                            <span class="action-icons">
+                                <a href="{% url 'edit_song' song.id %}" class="text-warning me-2"><i class="fas fa-pencil-alt"></i></a>
+                                <a href="{% url 'delete_song' song.id %}" class="text-danger"><i class="fas fa-trash"></i></a>
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </a> 
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</main>
+
+<!-- Новая категория -->
+<div class="modal fade" id="createCategoryModal" tabindex="-1" aria-labelledby="createCategoryModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="createCategoryModalLabel">Добавить категорию</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{% url 'create_section' %}">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="name" class="form-label">Название категории</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Создать</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Новая песня -->
+<div class="modal fade" id="createSongModal" tabindex="-1" aria-labelledby="createSongModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="createSongModalLabel">Добавить песню</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{% url 'create' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="section" class="form-label">Категория</label>
+                <select name="section" class="form-select" id="section" required>
+                    {% for section in sections %}
+                    <option value="{{ section.id }}">{{ section.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="album" class="form-label">Альбом</label>
+                <select name="album" class="form-select" id="album">
+                    <option value="">Нет альбома</option>
+                    {% for album in albums %}
+                    <option value="{{ album.id }}">{{ album.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="image" class="form-label">Обложка песни</label>
+                <input type="file" class="form-control" id="image" name="image">
+            </div>
+            <div class="mb-3">
+                <label for="comment" class="form-label">Текстовый комментарий</label>
+                <textarea class="form-control" id="comment" name="comment"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="lyrics" class="form-label">Текст песни</label>
+                <textarea class="form-control" id="lyrics" name="lyrics" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="translate_lyrics" class="form-label">Перевод песни</label>
+                <textarea class="form-control" id="translate_lyrics" name="translate_lyrics"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="audio_file" class="form-label">Аудиофайл</label>
+                <input type="file" class="form-control" id="audio_file" name="audio_file">
+                <label for="audio_file" class="form-label"></label>
+                <input type="file" class="form-control" id="audio_file_1" name="audio_file_1">
+            </div>
+            <div class="mb-3">
+                <label for="video_file" class="form-label">Видеофайл</label>
+                <input type="file" class="form-control" id="video_file" name="video_file">
+                <label for="video_file_1" class="form-label"></label>
+                <input type="file" class="form-control" id="video_file_1" name="video_file_1">
+            </div>
+            <button type="submit" class="btn btn-primary">Создать</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Новый альбом -->
+<div class="modal fade" id="createAlbumModal" tabindex="-1" aria-labelledby="createAlbumModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="createAlbumModalLabel">Добавить альбом</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{% url 'create_album' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="section" class="form-label">Категория</label>
+                <select name="section" class="form-select" id="section" required>
+                    {% for section in sections %}
+                    <option value="{{ section.id }}">{{ section.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="image" class="form-label">Обложка альбома</label>
+                <input type="file" class="form-control" id="image" name="image" required>
+            </div>
+            <div class="mb-3">
+                <label for="name" class="form-label">Название альбома</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="mb-3">
+                <label for="artist" class="form-label">Исполнитель</label>
+                <input type="text" class="form-control" id="artist" name="artist" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Создать</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Редактирование категории -->
+<div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editCategoryModalLabel">Редактировать категорию</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="edit_category_name" class="form-label">Название категории</label>
+                <input type="text" class="form-control" id="edit_category_name" name="name" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Модальное окно для редактирования категорий
+        var editSectionModal = document.getElementById('editCategoryModal');
+        editSectionModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var sectionId = button.getAttribute('data-id');
+            var sectionName = button.getAttribute('data-name');
+
+            var modalTitle = editSectionModal.querySelector('.modal-title');
+            var modalBodyInput = editSectionModal.querySelector('.modal-body input[name="name"]');
+            var modalForm = editSectionModal.querySelector('form');
+
+            modalTitle.textContent = 'Редактировать категорию: ' + sectionName;
+            modalBodyInput.value = sectionName;
+            modalForm.action = '{% url "edit_section" 0 %}'.replace('0', sectionId);
+        });
+
+        // Модальное окно для редактирования песни
+        var editSongModal = document.getElementById('editSongModal');
+        editSongModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var songId = button.getAttribute('data-id');
+            var title = button.getAttribute('data-title');
+            var artist = button.getAttribute('data-artist');
+            var year = button.getAttribute('data-year');
+            var lyrics = button.getAttribute('data-lyrics');
+            var translateLyrics = button.getAttribute('data-translate_lyrics');
+            var comment = button.getAttribute('data-comment');
+            var sectionId = button.getAttribute('data-section');
+            var albumId = button.getAttribute('data-album');
+
+            // Получаем ссылки на элементы формы
+            var modalForm = editSongModal.querySelector('form');
+            modalForm.action = '{% url "edit_song" 0 %}'.replace('0', songId);
+
+            // Заполняем форму данными песни
+            editSongModal.querySelector('#edit_song_id').value = songId;
+            editSongModal.querySelector('#edit_title').value = title;
+            editSongModal.querySelector('#edit_artist').value = artist;
+            editSongModal.querySelector('#edit_year').value = year;
+            editSongModal.querySelector('#edit_lyrics').value = lyrics;
+            editSongModal.querySelector('#edit_translate_lyrics').value = translateLyrics;
+            editSongModal.querySelector('#edit_comment').value = comment;
+            editSongModal.querySelector('#edit_section').value = sectionId;
+            editSongModal.querySelector('#edit_album').value = albumId;
+
+            // Заполнение аудиофайлов
+            var audioFileElement = document.querySelector('#edit_audio_file');
+            var audioFileName = button.getAttribute('data-audio_file');
+            if (audioFileName) {
+                var audioLabel = document.createElement('label');
+                audioLabel.textContent = 'Текущий аудио: ' + audioFileName;
+                var deleteAudioCheckbox = document.createElement('input');
+                deleteAudioCheckbox.setAttribute('type', 'checkbox');
+                deleteAudioCheckbox.setAttribute('name', 'audio_file-clear');
+                var deleteAudioLabel = document.createElement('label');
+                deleteAudioLabel.textContent = 'Удалить аудиофайл';
+                audioFileElement.insertAdjacentElement('beforebegin', audioLabel);
+                audioFileElement.insertAdjacentElement('beforebegin', deleteAudioCheckbox);
+                audioFileElement.insertAdjacentElement('beforebegin', deleteAudioLabel);
+            }
+
+            // Заполнение видеофайлов
+            var videoFileElement = document.querySelector('#edit_video_file');
+            var videoFileName = button.getAttribute('data-video_file');
+            if (videoFileName) {
+                var videoLabel = document.createElement('label');
+                videoLabel.textContent = 'Текущий видео: ' + videoFileName;
+                var deleteVideoCheckbox = document.createElement('input');
+                deleteVideoCheckbox.setAttribute('type', 'checkbox');
+                deleteVideoCheckbox.setAttribute('name', 'video_file-clear');
+                var deleteVideoLabel = document.createElement('label');
+                deleteVideoLabel.textContent = 'Удалить видеофайл';
+                videoFileElement.insertAdjacentElement('beforebegin', videoLabel);
+                videoFileElement.insertAdjacentElement('beforebegin', deleteVideoCheckbox);
+                videoFileElement.insertAdjacentElement('beforebegin', deleteVideoLabel);
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

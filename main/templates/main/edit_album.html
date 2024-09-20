@@ -1,0 +1,56 @@
+{% load static %}
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Редактировать запись</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'main/css/song_detail.css' %}">
+    <link rel="shortcut icon" href="{% static 'main/img/logo.svg' %}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+</head>
+<body>
+
+<aside>
+    <a href="{% url 'index' %}"><img src="{% static 'main/img/logo.svg' %}" alt="Лого"></a>
+    <span class="logo">Музыкальный архив</span>
+    <h3>Редактирование записи</h3>
+</aside>
+
+<main>
+    <h1>Редактировать альбом</h1>
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="content">
+                    <form method="post" enctype="multipart/form-data" class="rounded-border">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="section" class="form-label">Категория</label>
+                            {{ form.section }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="image" class="form-label">Обложка песни</label>
+                            {{ form.image }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Название альбома</label>
+                            {{ form.name }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="artist" class="form-label">Исполнитель</label>
+                            {{ form.artist }}
+                        </div>
+               
+                        <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

@@ -1,0 +1,149 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    display: flex;
+    height: 100vh;
+    background: linear-gradient(to right, #e0eafc, #cfdef3);
+}
+
+aside {
+    width: 250px;
+    background-color: #343a40;
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+aside img {
+    width: 100px;
+    margin-bottom: 20px;
+}
+
+aside .logo {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+aside input[type="search"] {
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #495057;
+    border-radius: 5px;
+    background-color: #495057;
+    color: white;
+}
+
+aside h3 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+aside ul {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+}
+
+aside ul li {
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+aside ul li a {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px;
+    display: block;
+    text-align: center;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+aside ul li a:hover {
+    background-color: #ff0000;
+}
+
+main {
+    flex-grow: 1;
+    padding: 30px;
+    background-color: #f4f6f7;
+    color: #2c3e50;
+    overflow-y: auto;
+}
+.header-image img {
+    max-width: 350px; 
+    max-height: 350px; 
+    width: auto; 
+    height: auto; 
+    object-fit: cover; 
+    border-radius: 10px; 
+}
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; 
+    gap: 30px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.song-lyrics, .song-translate, .song-video {
+    background-color: #ecf0f1;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.song-lyrics:hover, .song-translate:hover, .song-video:hover {
+    transform: scale(1.02);
+}
+.song-lyrics p, .song-translate p {
+    margin: 10px 0; 
+    line-height: 1.6; 
+    white-space: pre-wrap;
+}
+.song-lyrics h3, .song-translate h3, .song-video h3 {
+    font-size: 1.5em;
+    color: #e74c3c;
+}
+
+.audio{
+    margin-top: 20px;
+}
+
+.video {
+    display: block;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+   
+}
+
+.video video {
+    margin-bottom: 20px; 
+}
+
+audio{
+    width: 100px;
+    border-radius: 10px;
+}
+
+
+
+@media (max-width: 768px) {
+    .grid {
+        grid-template-columns: 1fr; 
+    }
+}

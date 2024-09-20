@@ -1,0 +1,255 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+
+body {
+    display: flex;
+    height: 100vh;
+    background-color: #b8b5b5;
+    overflow: hidden; 
+}
+
+aside {
+    width: 250px;
+    background-color: #343a40;
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    overflow-y: auto; 
+}
+
+aside img {
+    width: 100px;
+    margin-bottom: 20px;
+}
+
+aside .logo {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+aside input[type="search"] {
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #495057;
+    border-radius: 5px;
+    background-color: #495057;
+    color: white;
+}
+
+aside h3 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+aside ul {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+}
+
+aside ul li {
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+aside ul li .grid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+aside ul li .section-name a {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px;
+    display: block;
+    text-align: left;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+aside ul li .section-name a:hover {
+    background-color: #ff0000;
+}
+
+aside ul li .action-icons a {
+    margin-left: 10px;
+}
+
+main {
+    flex-grow: 1;
+    padding: 20px;
+    background-color: #f8f9fa; 
+    color: #343a40; 
+    overflow-y: auto;
+}
+
+main h1 {
+    font-family: Arial, sans-serif;
+    font-weight: lighter;
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #343a40;
+    text-align: center;
+}
+
+main h2 {
+    font-family: Arial, sans-serif;
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    color: #343a40;
+    text-align: center;
+}
+
+main p {
+    font-size: 1em;
+    color: #6c757d;
+    line-height: 1.6;
+    white-space: pre-line;
+}
+
+form.rounded-border {
+    border: 2px solid #ced4da;
+    border-radius: 10px;
+    padding: 20px;
+    background-color: #ffffff;
+}
+
+form .form-control {
+    background-color: #ffffff;
+    color: #343a40;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+}
+
+form .form-control:focus {
+    background-color: #e9ecef;
+    color: #343a40;
+    border-color: #ff0000;
+}
+
+form label {
+    color: #343a40;
+}
+
+form .btn-primary {
+    background-color: #ff0000;
+    border-color: #ff0000;
+}
+
+form .btn-primary:hover {
+    background-color: #e60000;
+    border-color: #e60000;
+}
+
+main .card {
+    text-align: center;
+}
+
+main .card-title, main .card-text {
+    color: #343a40;
+}
+
+.card-img-top {
+    width: auto;
+    height: auto;
+    max-height: 300px;
+    object-fit: cover;
+}
+
+.col-md-4 {
+    margin-bottom: 20px;
+}
+
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 50px;
+    background-color: #ffffff;
+    padding: 10px;
+    width: 100%;
+    border-radius: 10px;
+}
+
+.grid .song {
+    display: contents;
+}
+
+.grid .lyrics {
+    grid-column: 1;
+}
+
+.grid .translate_lyrics {
+    grid-column: 2;
+}
+
+.grid .video {
+    grid-column: 3;
+    padding-right: 10px;
+}
+
+
+.header {
+    background-color: #f8f9fa;
+    width: 100vh;
+    height: 100px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 10px;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0 20px;
+}
+
+.header h1 {
+    flex-grow: 1;
+}
+
+
+.iframe {
+    border-radius: 50px;
+}
+
+@media (max-width: 768px) {
+    body {
+        flex-direction: column;
+    }
+
+    aside {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    main {
+        padding: 10px;
+    }
+
+    aside ul li {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+a {
+    text-decoration: none;
+}
